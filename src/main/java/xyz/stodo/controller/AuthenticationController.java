@@ -19,6 +19,7 @@ import xyz.stodo.payload.SignUpRequest;
 import xyz.stodo.security.JWTTokenProvider;
 import xyz.stodo.security.SecurityConstants;
 import xyz.stodo.service.UserService;
+import xyz.stodo.validation.RequestErrorValidation;
 
 import javax.validation.Valid;
 
@@ -29,16 +30,16 @@ public class AuthenticationController {
     private JWTTokenProvider jwtTokenProvider;
     @Autowired
     private AuthenticationManager authenticationManager;
-//    @Autowired
-//    private ResponseErrorValidation responseErrorValidation;
+    @Autowired
+    private RequestErrorValidation requestErrorValidation;
     @Autowired
     private UserService userService;
 
     @PostMapping("/signin")
     public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest loginRequest,
                                                    BindingResult bindingResult) {
-//        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
-//        if (!ObjectUtils.isEmpty(errors)) return errors;
+        ResponseEntity<Object> errors = requestErrorValidation.getErrors(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(
@@ -56,8 +57,8 @@ public class AuthenticationController {
     @PostMapping("/signup")
     public ResponseEntity<Object> registerUser(@Valid @RequestBody SignUpRequest signupRequest,
                                                BindingResult bindingResult) {
-//        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
-//        if (!ObjectUtils.isEmpty(errors)) return errors;
+        ResponseEntity<Object> errors = requestErrorValidation.getErrors(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
 
         userService.createUser(signupRequest);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
