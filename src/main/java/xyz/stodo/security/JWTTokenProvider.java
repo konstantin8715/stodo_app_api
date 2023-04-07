@@ -19,7 +19,6 @@ public class JWTTokenProvider {
 
         claimsMap.put("id", user.getId().toString());
         claimsMap.put("email", user.getEmail());
-        claimsMap.put("createdAt", user.getCreatedAt());
 
         return Jwts
                 .builder()

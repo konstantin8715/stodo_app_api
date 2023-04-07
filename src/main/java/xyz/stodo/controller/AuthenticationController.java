@@ -28,10 +28,13 @@ import javax.validation.Valid;
 public class AuthenticationController {
     @Autowired
     private JWTTokenProvider jwtTokenProvider;
+
     @Autowired
     private AuthenticationManager authenticationManager;
+
     @Autowired
     private RequestErrorValidation requestErrorValidation;
+
     @Autowired
     private UserService userService;
 
