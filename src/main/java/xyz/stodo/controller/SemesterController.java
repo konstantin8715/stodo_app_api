@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import xyz.stodo.entity.Semester;
 import xyz.stodo.entity.User;
 import xyz.stodo.payload.dto.SemesterRequestDto;
 import xyz.stodo.payload.dto.SemesterResponseDto;
@@ -46,5 +45,25 @@ public class SemesterController {
         User user = userService.getUserByPrincipal(principal);
 
         return ResponseEntity.ok(semesterService.getAllSemestersForUser(user));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Object> updateSemester(@PathVariable String id,
+                                                 @Valid @RequestBody SemesterRequestDto semesterRequestDto,
+                                                 BindingResult bindingResult,
+                                                 Principal principal) {
+        ResponseEntity<Object> errors = requestErrorValidation.getErrors(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+
+        User user = userService.getUserByPrincipal(principal);
+
+        return ResponseEntity.ok(semesterService.updateSemester(Long.parseLong(id), semesterRequestDto, user));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteSemester(@PathVariable String id, Principal principal) {
+        User user = userService.getUserByPrincipal(principal);
+
+        return ResponseEntity.ok(semesterService.deleteSemester(Long.parseLong(id), user));
     }
 }
