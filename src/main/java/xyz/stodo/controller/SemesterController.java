@@ -6,8 +6,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import xyz.stodo.entity.User;
-import xyz.stodo.payload.dto.SemesterRequestDto;
-import xyz.stodo.payload.dto.SemesterResponseDto;
+import xyz.stodo.payload.dto.TitleRequestDto;
+import xyz.stodo.payload.dto.SimpleResponseDto;
 import xyz.stodo.service.SemesterService;
 import xyz.stodo.service.UserService;
 import xyz.stodo.validation.RequestErrorValidation;
@@ -29,7 +29,7 @@ public class SemesterController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<Object> createSemester(@Valid @RequestBody SemesterRequestDto semesterDto,
+    public ResponseEntity<Object> createSemester(@Valid @RequestBody TitleRequestDto semesterDto,
                                                  BindingResult bindingResult,
                                                  Principal principal) {
         ResponseEntity<Object> errors = requestErrorValidation.getErrors(bindingResult);
@@ -41,7 +41,7 @@ public class SemesterController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SemesterResponseDto>> getAllSemestersForUser(Principal principal) {
+    public ResponseEntity<List<SimpleResponseDto>> getAllSemestersForUser(Principal principal) {
         User user = userService.getUserByPrincipal(principal);
 
         return ResponseEntity.ok(semesterService.getAllSemestersForUser(user));
@@ -49,7 +49,7 @@ public class SemesterController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Object> updateSemester(@PathVariable String id,
-                                                 @Valid @RequestBody SemesterRequestDto semesterRequestDto,
+                                                 @Valid @RequestBody TitleRequestDto semesterRequestDto,
                                                  BindingResult bindingResult,
                                                  Principal principal) {
         ResponseEntity<Object> errors = requestErrorValidation.getErrors(bindingResult);

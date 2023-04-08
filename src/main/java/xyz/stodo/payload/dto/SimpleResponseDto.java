@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class SemesterResponseDto {
+public class SimpleResponseDto {
     private Long id;
     private String title;
     private LocalDateTime createdAt;
