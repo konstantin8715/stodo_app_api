@@ -53,7 +53,7 @@ public class SubjectService {
         return subjectResponseDto;
     }
 
-    private Subject getSubjectByIdAndSemester(Long id, Semester semester) {
+    public Subject getSubjectByIdAndSemester(Long id, Semester semester) {
         return subjectRepository
                 .findByIdAndSemester(id, semester)
                 .orElseThrow(() ->
