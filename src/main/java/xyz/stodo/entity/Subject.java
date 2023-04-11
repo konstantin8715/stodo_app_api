@@ -16,7 +16,7 @@ public class Subject {
     @ManyToOne(fetch = FetchType.LAZY)
     private Semester semester;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "task_id")
+    @JoinColumn(name = "subject_id")
     private List<Task> tasks;
     private LocalDateTime createdAt;
 

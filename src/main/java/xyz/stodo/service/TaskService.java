@@ -42,7 +42,9 @@ public class TaskService {
 
         TaskResponseDto taskResponseDto = new TaskResponseDto();
         taskResponseDto.setId(task.getId());
+        taskResponseDto.setTitle(task.getTitle());
         taskResponseDto.setDone(task.isDone());
+        taskResponseDto.setCreatedAt(task.getCreatedAt());
         taskResponseDto.setDeadlineDate(task.getDeadlineDate());
 
         return taskResponseDto;
@@ -92,7 +94,7 @@ public class TaskService {
                 .findByIdAndSubject(id, subject)
                 .orElseThrow(() ->
                         new SemesterNotFoundException(
-                                "Subject cannot be found for semester: " + subject.getId())
+                                "Task cannot be found for subject: " + subject.getId())
                 );
     }
 
@@ -123,6 +125,8 @@ public class TaskService {
         if (updateTaskRequestDto.getTitle() != null) task.setTitle(updateTaskRequestDto.getTitle());
         if (updateTaskRequestDto.getDeadlineDate() != null)
             task.setDeadlineDate(updateTaskRequestDto.getDeadlineDate());
+
+        taskRepository.save(task);
 
         TaskResponseDto taskResponseDto = new TaskResponseDto();
         taskResponseDto.setId(task.getId());
