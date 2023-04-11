@@ -7,11 +7,9 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 @Data
-public class TaskRequestDto {
-    @NotBlank(message = "title should not be empty")
+public class UpdateTaskRequestDto {
     private String title;
 
-    @NotBlank(message = "deadline date should not be empty")
     @JsonFormat(pattern = "yyyy-mm-dd")
     private LocalDate deadlineDate;
 }
