@@ -22,6 +22,7 @@ public class User implements UserDetails {
     @JoinColumn(name = "user_id")
     private List<Semester> semesters;
     private LocalDateTime createdAt;
+    private boolean enabled;
 
     @PrePersist
     private void onCreate() {
@@ -55,6 +56,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }

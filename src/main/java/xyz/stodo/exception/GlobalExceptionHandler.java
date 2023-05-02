@@ -30,4 +30,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<ExceptionMessageResponse>(exceptionMessageResponse,
                 HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<ExceptionMessageResponse> handleIncorrectEmailException(
+            IncorrectEmailException incorrectEmailException
+    ) {
+        ExceptionMessageResponse exceptionMessageResponse =
+                new ExceptionMessageResponse(incorrectEmailException.getMessage());
+
+        return new ResponseEntity<ExceptionMessageResponse>(exceptionMessageResponse,
+                HttpStatus.BAD_REQUEST);
+    }
 }

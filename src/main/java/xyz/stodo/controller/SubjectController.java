@@ -18,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/subject")
+@CrossOrigin
 public class SubjectController {
     @Autowired
     private RequestErrorValidation requestErrorValidation;

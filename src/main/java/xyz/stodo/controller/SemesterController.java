@@ -18,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/semester")
+@CrossOrigin
 public class SemesterController {
     @Autowired
     private SemesterService semesterService;
