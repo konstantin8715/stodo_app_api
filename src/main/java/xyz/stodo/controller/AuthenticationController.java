@@ -77,9 +77,9 @@ public class AuthenticationController {
         return new ResponseEntity<>(new MessageResponse("Invalid token"), HttpStatus.UNAUTHORIZED);
     }
 
-    @PostMapping("/getPassword")
-    public ResponseEntity<MessageResponse> getPassword(@RequestBody GetPasswordRequest getPasswordRequest) {
-        String message = userService.getPassword(getPasswordRequest);
+    @PostMapping("/generateNewPassword")
+    public ResponseEntity<MessageResponse> generateNewPassword(@RequestBody GetPasswordRequest getPasswordRequest) {
+        String message = userService.generateNewPassword(getPasswordRequest);
 
         return ResponseEntity.ok(new MessageResponse(message));
     }

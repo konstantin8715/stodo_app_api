@@ -56,13 +56,14 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.setEnabled(false);
 
+        userRepository.save(user);
+        String token = UUID.randomUUID().toString();
+        saveVerificationTokenForUser(token, user);
+        String url = "http://localhost:8080/api/auth/verifyRegistration?token=" + token;
+        mailSender.send(signupRequest.getEmail(), "Verify registration", url);
+        return "User registered successfully! Please check your email!";
+
 //        try {
-            userRepository.save(user);
-            String token = UUID.randomUUID().toString();
-            saveVerificationTokenForUser(token, user);
-            String url = "http://localhost:8080/api/auth/verifyRegistration?token=" + token;
-            mailSender.send(signupRequest.getEmail(), "Verify registration", url);
-            return "User registered successfully! Please check your email!";
 //        }
 //        catch (Exception e) {
 ////            throw new UserExistException("The user " + user.getEmail() + " already exist." +
@@ -70,14 +71,17 @@ public class UserService {
 //        }
     }
 
-    public String getPassword(GetPasswordRequest getPasswordRequest) {
+    public String generateNewPassword(GetPasswordRequest getPasswordRequest) {
         Optional<User> userOptional = userRepository.findByEmail(getPasswordRequest.getEmail());
 
         if (userOptional.isEmpty())
             throw new IncorrectEmailException("There is no user with this email address. Please register.");
 
         User user = userOptional.get();
-        mailSender.send(user.getEmail(), "Your password", passwordEncoder.encode(user.getPassword()));
+        String newPassword = UUID.randomUUID().toString();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        mailSender.send(user.getEmail(), "Your password", newPassword);
 
         return "Password has been sent by email " + user.getEmail();
     }

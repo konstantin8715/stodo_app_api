@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public class InvalidLoginResponse {
-    private final String message = "Invalid username and (or) password";
+    private final String message = "Mail not confirmed or invalid username and (or) password";
 }
