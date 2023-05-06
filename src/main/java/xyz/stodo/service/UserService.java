@@ -3,12 +3,14 @@ package xyz.stodo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import xyz.stodo.entity.ResetPasswordCode;
 import xyz.stodo.entity.User;
 import xyz.stodo.entity.VerificationToken;
-import xyz.stodo.exception.IncorrectEmailException;
-import xyz.stodo.exception.UserExistException;
-import xyz.stodo.payload.GetPasswordRequest;
+import xyz.stodo.exception.*;
+import xyz.stodo.payload.ChangePasswordRequest;
+import xyz.stodo.payload.EmailRequest;
 import xyz.stodo.payload.SignUpRequest;
+import xyz.stodo.repository.ResetPasswordCodeRepository;
 import xyz.stodo.repository.UserRepository;
 import xyz.stodo.repository.VerificationTokenRepository;
 
@@ -20,6 +22,7 @@ import java.util.UUID;
 @Service
 public class UserService {
     // TODO: 4/7/23 Добавить логгирование
+    // TODO: 06.05.2023 Зарефакторить
     @Autowired
     private UserRepository userRepository;
     
@@ -43,6 +46,9 @@ public class UserService {
         Optional<User> userOptional = userRepository.findByEmail(signupRequest.getEmail());
 
         if (userOptional.isPresent()) {
+            if (userOptional.get().isEnabled()) {
+                return "The user " + signupRequest.getEmail() + " already exist and enabled, please login";
+            }
             String token = UUID.randomUUID().toString();
             saveVerificationTokenForUser(token, userOptional.get());
             String url = "http://localhost:8080/api/auth/verifyRegistration?token=" + token;
@@ -62,28 +68,6 @@ public class UserService {
         String url = "http://localhost:8080/api/auth/verifyRegistration?token=" + token;
         mailSender.send(signupRequest.getEmail(), "Verify registration", url);
         return "User registered successfully! Please check your email!";
-
-//        try {
-//        }
-//        catch (Exception e) {
-////            throw new UserExistException("The user " + user.getEmail() + " already exist." +
-////                    " Please check your email for the verification token");
-//        }
-    }
-
-    public String generateNewPassword(GetPasswordRequest getPasswordRequest) {
-        Optional<User> userOptional = userRepository.findByEmail(getPasswordRequest.getEmail());
-
-        if (userOptional.isEmpty())
-            throw new IncorrectEmailException("There is no user with this email address. Please register.");
-
-        User user = userOptional.get();
-        String newPassword = UUID.randomUUID().toString();
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
-        mailSender.send(user.getEmail(), "Your password", newPassword);
-
-        return "Password has been sent by email " + user.getEmail();
     }
 
     public void saveVerificationTokenForUser(String token, User user) {
@@ -92,11 +76,13 @@ public class UserService {
         verificationTokenRepository.save(verificationToken);
     }
 
-    public boolean validateVerificationToken(String token) {
+    public String validateVerificationToken(String token) {
         Optional<VerificationToken> verificationTokenOptional
                 = verificationTokenRepository.findByToken(token);
 
-        if (verificationTokenOptional.isEmpty()) return false;
+        if (verificationTokenOptional.isEmpty()) {
+            throw new InvalidTokenException("Invalid token");
+        }
 
         VerificationToken verificationToken = verificationTokenOptional.get();
 
@@ -106,12 +92,12 @@ public class UserService {
         if ((verificationToken.getExpirationTime().getTime()
                 - cal.getTime().getTime()) <= 0) {
             verificationTokenRepository.delete(verificationToken);
-            return false;
+            throw new ExpiredTokenException("Token is expired");
         }
 
         user.setEnabled(true);
         userRepository.save(user);
 
-        return true;
+        return "User verification successfully!";
     }
 }

@@ -39,6 +39,39 @@ public class GlobalExceptionHandler {
                 new ExceptionMessageResponse(incorrectEmailException.getMessage());
 
         return new ResponseEntity<ExceptionMessageResponse>(exceptionMessageResponse,
+                HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ExceptionMessageResponse> handleIncorrectResetPasswordCodeException(
+            IncorrectResetPasswordCodeException incorrectResetPasswordCodeException
+    ) {
+        ExceptionMessageResponse exceptionMessageResponse =
+                new ExceptionMessageResponse(incorrectResetPasswordCodeException.getMessage());
+
+        return new ResponseEntity<ExceptionMessageResponse>(exceptionMessageResponse,
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ExceptionMessageResponse> handleInvalidTokenException(
+            InvalidTokenException invalidTokenException
+    ) {
+        ExceptionMessageResponse exceptionMessageResponse =
+                new ExceptionMessageResponse(invalidTokenException.getMessage());
+
+        return new ResponseEntity<ExceptionMessageResponse>(exceptionMessageResponse,
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ExceptionMessageResponse> handleExpiredTokenException(
+            ExpiredTokenException expiredTokenException
+    ) {
+        ExceptionMessageResponse exceptionMessageResponse =
+                new ExceptionMessageResponse(expiredTokenException.getMessage());
+
+        return new ResponseEntity<ExceptionMessageResponse>(exceptionMessageResponse,
                 HttpStatus.BAD_REQUEST);
     }
 }

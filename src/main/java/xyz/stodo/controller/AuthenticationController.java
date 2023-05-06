@@ -10,16 +10,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import xyz.stodo.entity.User;
 import xyz.stodo.payload.*;
 import xyz.stodo.security.JWTTokenProvider;
 import xyz.stodo.security.SecurityConstants;
 import xyz.stodo.service.MailSender;
+import xyz.stodo.service.ResetPasswordService;
 import xyz.stodo.service.UserService;
 import xyz.stodo.validation.RequestErrorValidation;
 
 import javax.validation.Valid;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -36,6 +35,9 @@ public class AuthenticationController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ResetPasswordService resetPasswordService;
 
     @Autowired
     private MailSender mailSender;
@@ -70,16 +72,29 @@ public class AuthenticationController {
         return ResponseEntity.ok(new MessageResponse(message));
     }
 
-    @PostMapping("/verifyRegistration")
+    @GetMapping("/verifyRegistration")
     public ResponseEntity<MessageResponse> verifyRegistration(@RequestParam("token") String token) {
-        if (userService.validateVerificationToken(token))
-            return ResponseEntity.ok(new MessageResponse("User verification successfully!"));
-        return new ResponseEntity<>(new MessageResponse("Invalid token"), HttpStatus.UNAUTHORIZED);
+        return ResponseEntity.ok(new MessageResponse(userService.validateVerificationToken(token)));
     }
 
-    @PostMapping("/generateNewPassword")
-    public ResponseEntity<MessageResponse> generateNewPassword(@RequestBody GetPasswordRequest getPasswordRequest) {
-        String message = userService.generateNewPassword(getPasswordRequest);
+    @PostMapping("/forgotPassword")
+    public ResponseEntity<Object> forgotPassword(@Valid @RequestBody EmailRequest emailRequest,
+                                                 BindingResult bindingResult) {
+        ResponseEntity<Object> errors = requestErrorValidation.getErrors(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+
+        String message = resetPasswordService.sendResetPasswordCode(emailRequest);
+
+        return ResponseEntity.ok(new MessageResponse(message));
+    }
+
+    @PostMapping("/resetPassword")
+    public ResponseEntity<Object> resetPassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest,
+                                                BindingResult bindingResult) {
+        ResponseEntity<Object> errors = requestErrorValidation.getErrors(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+
+        String message = resetPasswordService.resetPassword(changePasswordRequest);
 
         return ResponseEntity.ok(new MessageResponse(message));
     }

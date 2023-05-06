@@ -27,7 +27,7 @@ public class RequestErrorValidation {
 //            for (FieldError error : result.getFieldErrors()) {
 //                errorMap.put(error.getField(), error.getDefaultMessage());
 //            }
-            return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Fields filled out incorrectly", HttpStatus.BAD_REQUEST);
         }
         return null;
     }
