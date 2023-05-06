@@ -9,7 +9,7 @@ import xyz.stodo.entity.User;
 import xyz.stodo.payload.dto.SimpleResponseDto;
 import xyz.stodo.payload.dto.TitleRequestDto;
 import xyz.stodo.service.SubjectService;
-import xyz.stodo.service.UserService;
+import xyz.stodo.service.RegistrationService;
 import xyz.stodo.validation.RequestErrorValidation;
 
 import javax.validation.Valid;
@@ -27,7 +27,7 @@ public class SubjectController {
     private SubjectService subjectService;
 
     @Autowired
-    private UserService userService;
+    private RegistrationService registrationService;
 
     @PostMapping("/{semesterId}")
     public ResponseEntity<Object> createSubject(@Valid @RequestBody TitleRequestDto titleRequestDto,
@@ -37,7 +37,7 @@ public class SubjectController {
         ResponseEntity<Object> errors = requestErrorValidation.getErrors(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        User user = userService.getUserByPrincipal(principal);
+        User user = registrationService.getUserByPrincipal(principal);
 
         return ResponseEntity.ok(subjectService.createSubject(titleRequestDto, Long.parseLong(semesterId), user));
     }
@@ -45,7 +45,7 @@ public class SubjectController {
     @GetMapping("/{semesterId}")
     public ResponseEntity<List<SimpleResponseDto>> getAllSubjects(@PathVariable String semesterId,
                                                                   Principal principal) {
-        User user = userService.getUserByPrincipal(principal);
+        User user = registrationService.getUserByPrincipal(principal);
 
         return ResponseEntity.ok(subjectService
                 .getAllSubjectsForSemester(Long.parseLong(semesterId), user));
@@ -60,7 +60,7 @@ public class SubjectController {
         ResponseEntity<Object> errors = requestErrorValidation.getErrors(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        User user = userService.getUserByPrincipal(principal);
+        User user = registrationService.getUserByPrincipal(principal);
 
         return ResponseEntity.ok(subjectService.updateSubject(Long.parseLong(semesterId),
                 Long.parseLong(subjectId), titleRequestDto, user));
@@ -70,7 +70,7 @@ public class SubjectController {
     public ResponseEntity<Object> deleteSubject(@PathVariable String semesterId,
                                                 @PathVariable String subjectId,
                                                 Principal principal) {
-        User user = userService.getUserByPrincipal(principal);
+        User user = registrationService.getUserByPrincipal(principal);
 
         return ResponseEntity.ok(subjectService.deleteSubject(Long.parseLong(semesterId),
                 Long.parseLong(subjectId), user));

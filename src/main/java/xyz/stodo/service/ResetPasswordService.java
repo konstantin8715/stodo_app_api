@@ -7,7 +7,7 @@ import xyz.stodo.entity.ResetPasswordCode;
 import xyz.stodo.entity.User;
 import xyz.stodo.exception.IncorrectEmailException;
 import xyz.stodo.exception.IncorrectResetPasswordCodeException;
-import xyz.stodo.payload.ChangePasswordRequest;
+import xyz.stodo.payload.ResetPasswordRequest;
 import xyz.stodo.payload.EmailRequest;
 import xyz.stodo.repository.ResetPasswordCodeRepository;
 import xyz.stodo.repository.UserRepository;
@@ -52,30 +52,35 @@ public class ResetPasswordService {
         resetPasswordCodeRepository.save(resetPasswordCode);
     }
 
-    public String resetPassword(ChangePasswordRequest changePasswordRequest) {
-        Optional<User> userOptional = userRepository.findByEmail(changePasswordRequest.getEmail());
+    public String resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        Optional<User> userOptional = userRepository.findByEmail(resetPasswordRequest.getEmail());
 
         if (userOptional.isEmpty()) {
             throw new IncorrectEmailException("There is no user with this email address. Please register.");
         }
 
-        if (!validateResetPasswordCode(changePasswordRequest.getCode())) {
-            throw new IncorrectResetPasswordCodeException("Incorrect reset password code.");
+        if (!validateResetPasswordCode(resetPasswordRequest.getCode(),
+                resetPasswordRequest.getEmail())) {
+            throw new IncorrectResetPasswordCodeException("Incorrect reset password code or reset password code is expired.");
         }
 
         User user = userOptional.get();
-        user.setPassword(passwordEncoder.encode(changePasswordRequest.getPassword()));
+
+        user.setPassword(passwordEncoder.encode(resetPasswordRequest.getPassword()));
+        userRepository.save(user);
 
         return "Password change successfully";
     }
 
-    public boolean validateResetPasswordCode(String code) {
+    public boolean validateResetPasswordCode(String code, String email) {
         Optional<ResetPasswordCode> resetPasswordCodeOptional
                 = resetPasswordCodeRepository.findByCode(code);
 
         if (resetPasswordCodeOptional.isEmpty()) return false;
 
         ResetPasswordCode resetPasswordCode = resetPasswordCodeOptional.get();
+
+        if (!resetPasswordCode.getUser().getEmail().equals(email)) return false;
 
         Calendar cal = Calendar.getInstance();
 

@@ -9,7 +9,7 @@ import xyz.stodo.entity.User;
 import xyz.stodo.payload.dto.CreateTaskRequestDto;
 import xyz.stodo.payload.dto.TaskResponseDto;
 import xyz.stodo.payload.dto.UpdateTaskRequestDto;
-import xyz.stodo.service.UserService;
+import xyz.stodo.service.RegistrationService;
 import xyz.stodo.service.TaskService;
 import xyz.stodo.validation.RequestErrorValidation;
 
@@ -28,7 +28,7 @@ public class TaskController {
     private RequestErrorValidation requestErrorValidation;
 
     @Autowired
-    private UserService userService;
+    private RegistrationService registrationService;
 
     @PostMapping("/{semesterId}/{subjectId}")
     public ResponseEntity<Object> createTask(@Valid @RequestBody CreateTaskRequestDto taskRequestDto,
@@ -39,7 +39,7 @@ public class TaskController {
         ResponseEntity<Object> errors = requestErrorValidation.getErrors(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        User user = userService.getUserByPrincipal(principal);
+        User user = registrationService.getUserByPrincipal(principal);
 
         return ResponseEntity.ok(taskService.createTask(Long.parseLong(semesterId),
                 Long.parseLong(subjectId), taskRequestDto, user));
@@ -49,7 +49,7 @@ public class TaskController {
     public ResponseEntity<List<TaskResponseDto>> getAllTasks(@PathVariable String semesterId,
                                                              @PathVariable String subjectId,
                                                              Principal principal) {
-        User user = userService.getUserByPrincipal(principal);
+        User user = registrationService.getUserByPrincipal(principal);
 
         return ResponseEntity.ok(taskService.getAllTasksForSubject(Long.parseLong(semesterId),
                 Long.parseLong(subjectId), user));
@@ -60,7 +60,7 @@ public class TaskController {
                                                       @PathVariable String subjectId,
                                                       @PathVariable String taskId,
                                                       Principal principal) {
-        User user = userService.getUserByPrincipal(principal);
+        User user = registrationService.getUserByPrincipal(principal);
 
         return ResponseEntity.ok(taskService.deleteTask(Long.parseLong(semesterId),
                 Long.parseLong(subjectId), Long.parseLong(taskId), user));
@@ -71,7 +71,7 @@ public class TaskController {
                                                             @PathVariable String subjectId,
                                                             @PathVariable String taskId,
                                                             Principal principal) {
-        User user = userService.getUserByPrincipal(principal);
+        User user = registrationService.getUserByPrincipal(principal);
 
         return ResponseEntity.ok(taskService.changeTaskStatus(Long.parseLong(semesterId),
                 Long.parseLong(subjectId), Long.parseLong(taskId), user));
@@ -87,7 +87,7 @@ public class TaskController {
         ResponseEntity<Object> errors = requestErrorValidation.getErrors(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        User user = userService.getUserByPrincipal(principal);
+        User user = registrationService.getUserByPrincipal(principal);
 
         return ResponseEntity.ok(taskService.updateTask(Long.parseLong(semesterId),
                 Long.parseLong(subjectId), Long.parseLong(taskId), updateTaskRequestDto, user));

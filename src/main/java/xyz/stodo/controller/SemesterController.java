@@ -9,7 +9,7 @@ import xyz.stodo.entity.User;
 import xyz.stodo.payload.dto.TitleRequestDto;
 import xyz.stodo.payload.dto.SimpleResponseDto;
 import xyz.stodo.service.SemesterService;
-import xyz.stodo.service.UserService;
+import xyz.stodo.service.RegistrationService;
 import xyz.stodo.validation.RequestErrorValidation;
 
 import javax.validation.Valid;
@@ -27,7 +27,7 @@ public class SemesterController {
     private RequestErrorValidation requestErrorValidation;
 
     @Autowired
-    private UserService userService;
+    private RegistrationService registrationService;
 
     @PostMapping
     public ResponseEntity<Object> createSemester(@Valid @RequestBody TitleRequestDto semesterDto,
@@ -36,14 +36,14 @@ public class SemesterController {
         ResponseEntity<Object> errors = requestErrorValidation.getErrors(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        User user = userService.getUserByPrincipal(principal);
+        User user = registrationService.getUserByPrincipal(principal);
 
         return ResponseEntity.ok(semesterService.createSemester(semesterDto, user));
     }
 
     @GetMapping
     public ResponseEntity<List<SimpleResponseDto>> getAllSemestersForUser(Principal principal) {
-        User user = userService.getUserByPrincipal(principal);
+        User user = registrationService.getUserByPrincipal(principal);
 
         return ResponseEntity.ok(semesterService.getAllSemestersForUser(user));
     }
@@ -56,14 +56,14 @@ public class SemesterController {
         ResponseEntity<Object> errors = requestErrorValidation.getErrors(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        User user = userService.getUserByPrincipal(principal);
+        User user = registrationService.getUserByPrincipal(principal);
 
         return ResponseEntity.ok(semesterService.updateSemester(Long.parseLong(id), semesterRequestDto, user));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteSemester(@PathVariable String id, Principal principal) {
-        User user = userService.getUserByPrincipal(principal);
+        User user = registrationService.getUserByPrincipal(principal);
 
         return ResponseEntity.ok(semesterService.deleteSemester(Long.parseLong(id), user));
     }

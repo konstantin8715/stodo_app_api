@@ -1,7 +1,6 @@
 package xyz.stodo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,7 +14,7 @@ import xyz.stodo.security.JWTTokenProvider;
 import xyz.stodo.security.SecurityConstants;
 import xyz.stodo.service.MailSender;
 import xyz.stodo.service.ResetPasswordService;
-import xyz.stodo.service.UserService;
+import xyz.stodo.service.RegistrationService;
 import xyz.stodo.validation.RequestErrorValidation;
 
 import javax.validation.Valid;
@@ -34,13 +33,10 @@ public class AuthenticationController {
     private RequestErrorValidation requestErrorValidation;
 
     @Autowired
-    private UserService userService;
+    private RegistrationService registrationService;
 
     @Autowired
     private ResetPasswordService resetPasswordService;
-
-    @Autowired
-    private MailSender mailSender;
 
     @PostMapping("/signin")
     public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest loginRequest,
@@ -67,14 +63,14 @@ public class AuthenticationController {
         ResponseEntity<Object> errors = requestErrorValidation.getErrors(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        String message = userService.createUser(signupRequest);
+        String message = registrationService.createUser(signupRequest);
 
         return ResponseEntity.ok(new MessageResponse(message));
     }
 
     @GetMapping("/verifyRegistration")
     public ResponseEntity<MessageResponse> verifyRegistration(@RequestParam("token") String token) {
-        return ResponseEntity.ok(new MessageResponse(userService.validateVerificationToken(token)));
+        return ResponseEntity.ok(new MessageResponse(registrationService.validateVerificationToken(token)));
     }
 
     @PostMapping("/forgotPassword")
@@ -89,12 +85,12 @@ public class AuthenticationController {
     }
 
     @PostMapping("/resetPassword")
-    public ResponseEntity<Object> resetPassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest,
+    public ResponseEntity<Object> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest,
                                                 BindingResult bindingResult) {
         ResponseEntity<Object> errors = requestErrorValidation.getErrors(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        String message = resetPasswordService.resetPassword(changePasswordRequest);
+        String message = resetPasswordService.resetPassword(resetPasswordRequest);
 
         return ResponseEntity.ok(new MessageResponse(message));
     }

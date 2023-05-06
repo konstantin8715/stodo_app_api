@@ -3,14 +3,10 @@ package xyz.stodo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import xyz.stodo.entity.ResetPasswordCode;
 import xyz.stodo.entity.User;
 import xyz.stodo.entity.VerificationToken;
 import xyz.stodo.exception.*;
-import xyz.stodo.payload.ChangePasswordRequest;
-import xyz.stodo.payload.EmailRequest;
 import xyz.stodo.payload.SignUpRequest;
-import xyz.stodo.repository.ResetPasswordCodeRepository;
 import xyz.stodo.repository.UserRepository;
 import xyz.stodo.repository.VerificationTokenRepository;
 
@@ -20,7 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class UserService {
+public class RegistrationService {
     // TODO: 4/7/23 Добавить логгирование
     // TODO: 06.05.2023 Зарефакторить
     @Autowired

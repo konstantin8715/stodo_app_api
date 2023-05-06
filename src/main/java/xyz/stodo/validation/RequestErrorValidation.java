@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import xyz.stodo.payload.MessageResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,11 +24,16 @@ public class RequestErrorValidation {
                 }
             }
 
-//            System.out.println("error map:" + errorMap);
-//            for (FieldError error : result.getFieldErrors()) {
-//                errorMap.put(error.getField(), error.getDefaultMessage());
-//            }
-            return new ResponseEntity<>("Fields filled out incorrectly", HttpStatus.BAD_REQUEST);
+            StringBuilder errors = new StringBuilder();
+
+            errorMap.values().forEach(s -> {
+                errors.append(s);
+                errors.append(" ");
+            });
+
+            MessageResponse messageResponse = new MessageResponse(errors.toString());
+
+            return new ResponseEntity<>(messageResponse, HttpStatus.BAD_REQUEST);
         }
         return null;
     }
