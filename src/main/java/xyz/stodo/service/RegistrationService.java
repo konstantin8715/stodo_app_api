@@ -3,6 +3,7 @@ package xyz.stodo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import xyz.stodo.GlobalConstants;
 import xyz.stodo.entity.User;
 import xyz.stodo.entity.VerificationToken;
 import xyz.stodo.exception.*;
@@ -47,7 +48,7 @@ public class RegistrationService {
             }
             String token = UUID.randomUUID().toString();
             saveVerificationTokenForUser(token, userOptional.get());
-            String url = "http://localhost:8080/api/auth/verifyRegistration?token=" + token;
+            String url = GlobalConstants.SERVER_URL + "/api/auth/verifyRegistration?token=" + token;
             mailSender.send(signupRequest.getEmail(), "Verify registration", url);
             return "The user " + signupRequest.getEmail() + " already exist." +
                     " Please check your email for the verification token";
@@ -61,7 +62,7 @@ public class RegistrationService {
         userRepository.save(user);
         String token = UUID.randomUUID().toString();
         saveVerificationTokenForUser(token, user);
-        String url = "http://localhost:8080/api/auth/verifyRegistration?token=" + token;
+        String url = GlobalConstants.SERVER_URL + "/api/auth/verifyRegistration?token=" + token;
         mailSender.send(signupRequest.getEmail(), "Verify registration", url);
         return "User registered successfully! Please check your email!";
     }

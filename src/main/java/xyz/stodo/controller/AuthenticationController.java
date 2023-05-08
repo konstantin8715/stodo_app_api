@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import xyz.stodo.GlobalConstants;
 import xyz.stodo.payload.*;
 import xyz.stodo.security.JWTTokenProvider;
 import xyz.stodo.security.SecurityConstants;
@@ -17,7 +18,9 @@ import xyz.stodo.service.ResetPasswordService;
 import xyz.stodo.service.RegistrationService;
 import xyz.stodo.validation.RequestErrorValidation;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -69,7 +72,9 @@ public class AuthenticationController {
     }
 
     @GetMapping("/verifyRegistration")
-    public ResponseEntity<MessageResponse> verifyRegistration(@RequestParam("token") String token) {
+    public ResponseEntity<MessageResponse> verifyRegistration(@RequestParam("token") String token,
+                                                              HttpServletResponse response) throws IOException {
+        response.sendRedirect(GlobalConstants.CLIENT_URL);
         return ResponseEntity.ok(new MessageResponse(registrationService.validateVerificationToken(token)));
     }
 
