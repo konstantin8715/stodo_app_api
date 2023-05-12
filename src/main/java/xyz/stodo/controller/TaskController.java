@@ -46,13 +46,20 @@ public class TaskController {
     }
 
     @GetMapping("/{semesterId}/{subjectId}")
-    public ResponseEntity<List<TaskResponseDto>> getAllTasks(@PathVariable String semesterId,
+    public ResponseEntity<List<TaskResponseDto>> getAllTasksForSemesterAndSubject(@PathVariable String semesterId,
                                                              @PathVariable String subjectId,
                                                              Principal principal) {
         User user = registrationService.getUserByPrincipal(principal);
 
-        return ResponseEntity.ok(taskService.getAllTasksForSubject(Long.parseLong(semesterId),
+        return ResponseEntity.ok(taskService.getAllTasksForSemesterAndSubject(Long.parseLong(semesterId),
                 Long.parseLong(subjectId), user));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TaskResponseDto>> getAllTasks(Principal principal) {
+        User user = registrationService.getUserByPrincipal(principal);
+
+        return ResponseEntity.ok(taskService.getAllTasksForUser(user));
     }
 
     @DeleteMapping("/{semesterId}/{subjectId}/{taskId}")

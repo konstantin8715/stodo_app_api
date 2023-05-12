@@ -15,7 +15,7 @@ public class Task {
     private Long id;
     private String title;
     private boolean isDone;
-    @Column(nullable = false)
+//    @Column(nullable = false)
     @JsonFormat(pattern = "yyyy-mm-dd")
     private LocalDate deadlineDate;
     @ManyToOne(fetch = FetchType.LAZY)

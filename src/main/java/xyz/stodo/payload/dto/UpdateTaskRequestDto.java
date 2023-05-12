@@ -10,6 +10,6 @@ import java.time.LocalDate;
 public class UpdateTaskRequestDto {
     private String title;
 
-    @JsonFormat(pattern = "yyyy-mm-dd")
+//    @JsonFormat(pattern = "yyyy-mm-dd")
     private LocalDate deadlineDate;
 }

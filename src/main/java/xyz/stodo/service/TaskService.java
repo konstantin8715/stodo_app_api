@@ -14,6 +14,7 @@ import xyz.stodo.payload.dto.UpdateTaskRequestDto;
 import xyz.stodo.repository.TaskRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -50,7 +51,7 @@ public class TaskService {
         return taskResponseDto;
     }
 
-    public List<TaskResponseDto> getAllTasksForSubject(Long semesterId, Long subjectId, User user) {
+    public List<TaskResponseDto> getAllTasksForSemesterAndSubject(Long semesterId, Long subjectId, User user) {
         Semester semester = semesterService.getSemesterByIdAndUser(semesterId, user);
         Subject subject = subjectService.getSubjectByIdAndSemester(subjectId, semester);
 
@@ -59,6 +60,36 @@ public class TaskService {
 
         for (Task task:
                 tasks) {
+            TaskResponseDto taskResponseDto = new TaskResponseDto();
+            taskResponseDto.setId(task.getId());
+            taskResponseDto.setTitle(task.getTitle());
+            taskResponseDto.setDone(task.isDone());
+            taskResponseDto.setCreatedAt(task.getCreatedAt());
+            taskResponseDto.setDeadlineDate(task.getDeadlineDate());
+
+            taskResponseDtoList.add(taskResponseDto);
+        }
+
+        return taskResponseDtoList;
+    }
+
+    public List<TaskResponseDto> getAllTasksForUser(User user) {
+        List<Semester> userSemesters = user.getSemesters().stream().toList();
+        List<Subject> userSubjects = new ArrayList<>();
+        List<Task> userTasks = new ArrayList<>();
+
+        userSemesters.forEach(semester -> {
+            userSubjects.addAll(semester.getSubjects());
+        });
+
+        userSubjects.forEach(subject -> {
+            userTasks.addAll(subject.getTasks());
+        });
+
+        List<TaskResponseDto> taskResponseDtoList = new ArrayList<>();
+
+        for (Task task:
+                userTasks) {
             TaskResponseDto taskResponseDto = new TaskResponseDto();
             taskResponseDto.setId(task.getId());
             taskResponseDto.setTitle(task.getTitle());
