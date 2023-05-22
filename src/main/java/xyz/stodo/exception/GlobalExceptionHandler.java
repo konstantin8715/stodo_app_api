@@ -74,4 +74,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<ExceptionMessageResponse>(exceptionMessageResponse,
                 HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<ExceptionMessageResponse> handleInvalidFileException(
+            InvalidFileException invalidFileException
+    ) {
+        ExceptionMessageResponse exceptionMessageResponse =
+                new ExceptionMessageResponse(invalidFileException.getMessage());
+
+        return new ResponseEntity<ExceptionMessageResponse>(exceptionMessageResponse,
+                HttpStatus.BAD_REQUEST);
+    }
 }
