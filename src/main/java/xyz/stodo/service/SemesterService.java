@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import xyz.stodo.entity.Semester;
 import xyz.stodo.entity.User;
 import xyz.stodo.exception.SemesterNotFoundException;
+import xyz.stodo.factories.SimpleResponseDtoFactory;
 import xyz.stodo.payload.dto.TitleRequestDto;
 import xyz.stodo.payload.dto.SimpleResponseDto;
 import xyz.stodo.repository.SemesterRepository;
@@ -14,23 +15,19 @@ import java.util.List;
 
 @Service
 public class SemesterService {
-    // TODO: 4/7/23 Зарефакторить 
     @Autowired
     private SemesterRepository semesterRepository;
+
+    @Autowired
+    private SimpleResponseDtoFactory simpleResponseDtoFactory;
 
     public SimpleResponseDto createSemester(TitleRequestDto semesterDto, User user) {
         Semester semester = new Semester();
         semester.setTitle(semesterDto.getTitle());
         semester.setUser(user);
+        semesterRepository.save(semester);
 
-        Semester savedSemester = semesterRepository.save(semester);
-
-        SimpleResponseDto semesterResponseDto = new SimpleResponseDto();
-        semesterResponseDto.setId(semester.getId());
-        semesterResponseDto.setTitle(semester.getTitle());
-        semesterResponseDto.setCreatedAt(semester.getCreatedAt());
-
-        return semesterResponseDto;
+        return simpleResponseDtoFactory.makeSimpleResponseDto(semester);
     }
 
     public List<SimpleResponseDto> getAllSemestersForUser(User user) {
@@ -38,15 +35,9 @@ public class SemesterService {
         List<SimpleResponseDto> semesterResponseDtoList =
                 new ArrayList<>(semesters.size());
 
-        for (Semester semester:
-             semesters) {
-            SimpleResponseDto semesterResponseDto = new SimpleResponseDto();
-            semesterResponseDto.setId(semester.getId());
-            semesterResponseDto.setTitle(semester.getTitle());
-            semesterResponseDto.setCreatedAt(semester.getCreatedAt());
-
-            semesterResponseDtoList.add(semesterResponseDto);
-        }
+        semesters.forEach(semester -> {
+            semesterResponseDtoList.add(simpleResponseDtoFactory.makeSimpleResponseDto(semester));
+        });
 
         return semesterResponseDtoList;
     }
@@ -56,30 +47,17 @@ public class SemesterService {
                                             TitleRequestDto semesterDto,
                                             User user) {
         Semester semester = getSemesterByIdAndUser(id, user);
-
         semester.setTitle(semesterDto.getTitle());
-
         semesterRepository.save(semester);
 
-        SimpleResponseDto semesterResponseDto = new SimpleResponseDto();
-        semesterResponseDto.setId(semester.getId());
-        semesterResponseDto.setTitle(semester.getTitle());
-        semesterResponseDto.setCreatedAt(semester.getCreatedAt());
-
-        return semesterResponseDto;
+        return simpleResponseDtoFactory.makeSimpleResponseDto(semester);
     }
 
     public SimpleResponseDto deleteSemester(Long id, User user) {
         Semester semester = getSemesterByIdAndUser(id, user);
-
         semesterRepository.delete(semester);
 
-        SimpleResponseDto semesterResponseDto = new SimpleResponseDto();
-        semesterResponseDto.setId(semester.getId());
-        semesterResponseDto.setTitle(semester.getTitle());
-        semesterResponseDto.setCreatedAt(semester.getCreatedAt());
-
-        return semesterResponseDto;
+        return simpleResponseDtoFactory.makeSimpleResponseDto(semester);
     }
 
     public Semester getSemesterByIdAndUser(Long id, User user) {
