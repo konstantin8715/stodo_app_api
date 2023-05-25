@@ -13,5 +13,5 @@ public class TaskResponseDto {
     private String title;
     private boolean isDone;
     private LocalDateTime createdAt;
-    private LocalDate deadlineDate;
+    private LocalDateTime deadlineDate;
 }
