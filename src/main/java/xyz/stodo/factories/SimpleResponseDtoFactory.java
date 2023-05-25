@@ -2,6 +2,7 @@ package xyz.stodo.factories;
 
 import org.springframework.stereotype.Component;
 import xyz.stodo.entity.Semester;
+import xyz.stodo.entity.Subject;
 import xyz.stodo.payload.dto.SimpleResponseDto;
 
 @Component
@@ -16,4 +17,12 @@ public class SimpleResponseDtoFactory {
         return semesterResponseDto;
     }
 
+    public SimpleResponseDto makeSimpleResponseDto(Subject subject) {
+        SimpleResponseDto subjectResponseDto = new SimpleResponseDto();
+        subjectResponseDto.setId(subject.getId());
+        subjectResponseDto.setTitle(subject.getTitle());
+        subjectResponseDto.setCreatedAt(subject.getCreatedAt());
+
+        return subjectResponseDto;
+    }
 }

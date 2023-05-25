@@ -18,8 +18,6 @@ import java.util.UUID;
 
 @Service
 public class RegistrationService {
-    // TODO: 4/7/23 Добавить логгирование
-    // TODO: 06.05.2023 Зарефакторить
     @Autowired
     private UserRepository userRepository;
     
@@ -58,8 +56,8 @@ public class RegistrationService {
         user.setEmail(signupRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.setEnabled(false);
-
         userRepository.save(user);
+
         String token = UUID.randomUUID().toString();
         saveVerificationTokenForUser(token, user);
         String url = GlobalConstants.SERVER_URL + "/api/auth/verifyRegistration?token=" + token;
@@ -69,7 +67,6 @@ public class RegistrationService {
 
     public void saveVerificationTokenForUser(String token, User user) {
         VerificationToken verificationToken = new VerificationToken(user, token);
-
         verificationTokenRepository.save(verificationToken);
     }
 

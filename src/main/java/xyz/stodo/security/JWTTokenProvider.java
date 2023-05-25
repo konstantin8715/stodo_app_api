@@ -10,8 +10,6 @@ import java.util.Map;
 
 @Component
 public class JWTTokenProvider {
-
-    // TODO: 4/7/23 Добавить логгирование
     public String generateToken(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
 

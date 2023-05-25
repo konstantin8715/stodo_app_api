@@ -19,7 +19,6 @@ import java.util.Collections;
 
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
-    // TODO: 4/7/23 Добавить логгирование
     @Autowired
     private JWTTokenProvider jwtTokenProvider;
     @Autowired

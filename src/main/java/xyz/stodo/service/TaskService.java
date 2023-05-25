@@ -8,6 +8,7 @@ import xyz.stodo.entity.Subject;
 import xyz.stodo.entity.Task;
 import xyz.stodo.entity.User;
 import xyz.stodo.exception.SemesterNotFoundException;
+import xyz.stodo.factories.TaskResponseDtoFactory;
 import xyz.stodo.payload.dto.CreateTaskRequestDto;
 import xyz.stodo.payload.dto.TaskResponseDto;
 import xyz.stodo.payload.dto.UpdateTaskRequestDto;
@@ -19,7 +20,6 @@ import java.util.List;
 
 @Service
 public class TaskService {
-    // TODO: 4/11/23 Зарефакторить 
     @Autowired
     private TaskRepository taskRepository;
 
@@ -28,6 +28,9 @@ public class TaskService {
 
     @Autowired
     private SubjectService subjectService;
+
+    @Autowired
+    private TaskResponseDtoFactory taskResponseDtoFactory;
 
     public TaskResponseDto createTask(Long semesterId, Long subjectId,
                                       CreateTaskRequestDto createTaskRequestDto, User user) {
@@ -38,37 +41,20 @@ public class TaskService {
         task.setTitle(createTaskRequestDto.getTitle());
         task.setDeadlineDate(createTaskRequestDto.getDeadlineDate());
         task.setSubject(subject);
-
         taskRepository.save(task);
 
-        TaskResponseDto taskResponseDto = new TaskResponseDto();
-        taskResponseDto.setId(task.getId());
-        taskResponseDto.setTitle(task.getTitle());
-        taskResponseDto.setDone(task.isDone());
-        taskResponseDto.setCreatedAt(task.getCreatedAt());
-        taskResponseDto.setDeadlineDate(task.getDeadlineDate());
-
-        return taskResponseDto;
+        return taskResponseDtoFactory.makeTaskResponseDto(task);
     }
 
     public List<TaskResponseDto> getAllTasksForSemesterAndSubject(Long semesterId, Long subjectId, User user) {
         Semester semester = semesterService.getSemesterByIdAndUser(semesterId, user);
         Subject subject = subjectService.getSubjectByIdAndSemester(subjectId, semester);
-
         List<Task> tasks = taskRepository.findAllBySubjectOrderByCreatedAt(subject);
         List<TaskResponseDto> taskResponseDtoList = new ArrayList<>();
 
-        for (Task task:
-                tasks) {
-            TaskResponseDto taskResponseDto = new TaskResponseDto();
-            taskResponseDto.setId(task.getId());
-            taskResponseDto.setTitle(task.getTitle());
-            taskResponseDto.setDone(task.isDone());
-            taskResponseDto.setCreatedAt(task.getCreatedAt());
-            taskResponseDto.setDeadlineDate(task.getDeadlineDate());
-
-            taskResponseDtoList.add(taskResponseDto);
-        }
+        tasks.forEach(task -> {
+            taskResponseDtoList.add(taskResponseDtoFactory.makeTaskResponseDto(task));
+        });
 
         return taskResponseDtoList;
     }
@@ -88,17 +74,9 @@ public class TaskService {
 
         List<TaskResponseDto> taskResponseDtoList = new ArrayList<>();
 
-        for (Task task:
-                userTasks) {
-            TaskResponseDto taskResponseDto = new TaskResponseDto();
-            taskResponseDto.setId(task.getId());
-            taskResponseDto.setTitle(task.getTitle());
-            taskResponseDto.setDone(task.isDone());
-            taskResponseDto.setCreatedAt(task.getCreatedAt());
-            taskResponseDto.setDeadlineDate(task.getDeadlineDate());
-
-            taskResponseDtoList.add(taskResponseDto);
-        }
+        userTasks.forEach(task -> {
+            taskResponseDtoList.add(taskResponseDtoFactory.makeTaskResponseDto(task));
+        });
 
         return taskResponseDtoList;
     }
@@ -107,17 +85,9 @@ public class TaskService {
         Semester semester = semesterService.getSemesterByIdAndUser(semesterId, user);
         Subject subject = subjectService.getSubjectByIdAndSemester(subjectId, semester);
         Task task = getTaskByIdAndSubject(taskId, subject);
-
         taskRepository.delete(task);
 
-        TaskResponseDto taskResponseDto = new TaskResponseDto();
-        taskResponseDto.setId(task.getId());
-        taskResponseDto.setTitle(task.getTitle());
-        taskResponseDto.setDone(task.isDone());
-        taskResponseDto.setCreatedAt(task.getCreatedAt());
-        taskResponseDto.setDeadlineDate(task.getDeadlineDate());
-
-        return taskResponseDto;
+        return taskResponseDtoFactory.makeTaskResponseDto(task);
     }
 
     public Task getTaskByIdAndSubject(Long id, Subject subject) {
@@ -133,18 +103,10 @@ public class TaskService {
         Semester semester = semesterService.getSemesterByIdAndUser(semesterId, user);
         Subject subject = subjectService.getSubjectByIdAndSemester(subjectId, semester);
         Task task = getTaskByIdAndSubject(taskId, subject);
-
         task.setDone(!task.isDone());
         taskRepository.save(task);
 
-        TaskResponseDto taskResponseDto = new TaskResponseDto();
-        taskResponseDto.setId(task.getId());
-        taskResponseDto.setTitle(task.getTitle());
-        taskResponseDto.setDone(task.isDone());
-        taskResponseDto.setCreatedAt(task.getCreatedAt());
-        taskResponseDto.setDeadlineDate(task.getDeadlineDate());
-
-        return taskResponseDto;
+        return taskResponseDtoFactory.makeTaskResponseDto(task);
     }
 
     public TaskResponseDto updateTask(Long semesterId, Long subjectId, Long taskId,
@@ -159,13 +121,6 @@ public class TaskService {
 
         taskRepository.save(task);
 
-        TaskResponseDto taskResponseDto = new TaskResponseDto();
-        taskResponseDto.setId(task.getId());
-        taskResponseDto.setTitle(task.getTitle());
-        taskResponseDto.setDone(task.isDone());
-        taskResponseDto.setCreatedAt(task.getCreatedAt());
-        taskResponseDto.setDeadlineDate(task.getDeadlineDate());
-
-        return taskResponseDto;
+        return taskResponseDtoFactory.makeTaskResponseDto(task);
     }
 }
