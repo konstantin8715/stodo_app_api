@@ -13,7 +13,6 @@ import xyz.stodo.GlobalConstants;
 import xyz.stodo.payload.*;
 import xyz.stodo.security.JWTTokenProvider;
 import xyz.stodo.security.SecurityConstants;
-import xyz.stodo.service.MailSender;
 import xyz.stodo.service.ResetPasswordService;
 import xyz.stodo.service.RegistrationService;
 import xyz.stodo.validation.RequestErrorValidation;

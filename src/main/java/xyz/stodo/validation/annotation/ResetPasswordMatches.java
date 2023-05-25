@@ -1,6 +1,5 @@
 package xyz.stodo.validation.annotation;
 
-import xyz.stodo.validation.PasswordValidator;
 import xyz.stodo.validation.ResetPasswordValidator;
 
 import javax.validation.Constraint;

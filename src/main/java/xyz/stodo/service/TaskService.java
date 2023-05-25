@@ -2,7 +2,6 @@ package xyz.stodo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 import xyz.stodo.entity.Semester;
 import xyz.stodo.entity.Subject;
 import xyz.stodo.entity.Task;
@@ -15,7 +14,6 @@ import xyz.stodo.payload.dto.UpdateTaskRequestDto;
 import xyz.stodo.repository.TaskRepository;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service

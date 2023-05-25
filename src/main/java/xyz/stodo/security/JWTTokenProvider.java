@@ -37,7 +37,6 @@ public class JWTTokenProvider {
                  ExpiredJwtException |
                  UnsupportedJwtException |
                  IllegalArgumentException ex) {
-//            LOG.error(ex.getMessage());
             return false;
         }
     }

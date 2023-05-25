@@ -10,14 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.stodo.entity.User;
-import xyz.stodo.exception.InvalidFileException;
 import xyz.stodo.file.FileManager;
-import xyz.stodo.repository.SemesterRepository;
 import xyz.stodo.service.RegistrationService;
 import xyz.stodo.service.ShareService;
 
 import javax.servlet.ServletContext;
-import java.io.IOException;
 import java.security.Principal;
 
 @RestController

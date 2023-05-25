@@ -2,7 +2,6 @@ package xyz.stodo.security;
 
 
 import com.google.gson.Gson;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -19,8 +18,7 @@ public class JWTAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException authException)
-            throws IOException, ServletException {
-//        System.out.println(authException.getMessage());
+            throws IOException {
         String jsonLoginResponse = new Gson().toJson(new InvalidLoginResponse());
         response.setContentType(SecurityConstants.CONTENT_TYPE);
         response.setStatus(HttpStatus.UNAUTHORIZED.value());

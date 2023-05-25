@@ -1,7 +1,6 @@
 package xyz.stodo.payload;
 
 import lombok.Data;
-import xyz.stodo.validation.annotation.PasswordMatches;
 import xyz.stodo.validation.annotation.ResetPasswordMatches;
 import xyz.stodo.validation.annotation.ValidEmail;
 

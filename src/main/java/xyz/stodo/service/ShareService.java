@@ -12,7 +12,6 @@ import xyz.stodo.file.FileManager;
 import xyz.stodo.repository.SemesterRepository;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @Service
 public class ShareService {
