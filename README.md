@@ -60,7 +60,7 @@ GET
 http://localhost:8080/api/auth/verifyRegistration?token=[token]
 ```
 ***Тело запроса***
-```json
+```console
 Нет
 ```
 **Описание:**
@@ -212,7 +212,7 @@ GET
 http://localhost:8080/api/semester
 ```
 ***Тело запроса***
-```json
+```console
 Нет
 ```
 ***Заголовок запроса***
@@ -295,7 +295,7 @@ http://localhost:8080/api/semester/{semesterId}
 ```
 
 ***Тело запроса***
-```json
+```console
 Нет
 ```
 
@@ -364,7 +364,7 @@ GET
 http://localhost:8080/api/subject/{semesterId}
 ```
 ***Тело запроса***
-```json
+```console
 Нет
 ```
 ***Заголовок запроса***
@@ -447,7 +447,7 @@ http://localhost:8080/api/subject/{semesterId}/{subjectId}
 ```
 
 ***Тело запроса***
-```json
+```console
 Нет
 ```
 
@@ -518,7 +518,7 @@ GET
 http://localhost:8080/api/task
 ```
 ***Тело запроса***
-```json
+```console
 Нет
 ```
 ***Заголовок запроса***
@@ -569,7 +569,7 @@ GET
 http://localhost:8080/api/task/{semesterId}/{subjectId}
 ```
 ***Тело запроса***
-```json
+```console
 Нет
 ```
 ***Заголовок запроса***
@@ -661,7 +661,7 @@ http://localhost:8080/api/subject/{semesterId}/{subjectId}/{taskId}
 ```
 
 ***Тело запроса***
-```json
+```console
 Нет
 ```
 
@@ -698,7 +698,7 @@ http://localhost:8080/api/subject/{semesterId}/{subjectId}/{taskId}
 ```
 
 ***Тело запроса***
-```json
+```console
 Нет
 ```
 
@@ -734,7 +734,7 @@ GET
 http://localhost:8080/api/share/dump/{semesterId}
 ```
 ***Тело запроса***
-```json
+```console
 Нет
 ```
 
@@ -748,7 +748,7 @@ Authorization: Bearer [token]
 <br>
 
 ***Тело ответа***
-```json
+```console
 Файл .json
 ```
 
@@ -762,7 +762,7 @@ POST
 http://localhost:8080/api/share/upload
 ```
 ***Тело запроса***
-```json
+```console
 Файл .json
 ```
 
@@ -776,6 +776,6 @@ Authorization: Bearer [token]
 <br>
 
 ***Тело ответа***
-```json
+```console
 Файл .json
 ```
