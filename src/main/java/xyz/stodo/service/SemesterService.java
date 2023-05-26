@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import xyz.stodo.entity.Semester;
 import xyz.stodo.entity.User;
 import xyz.stodo.exception.SemesterNotFoundException;
-import xyz.stodo.factories.SimpleResponseDtoFactory;
+import xyz.stodo.factory.SimpleResponseDtoFactory;
 import xyz.stodo.payload.dto.TitleRequestDto;
 import xyz.stodo.payload.dto.SimpleResponseDto;
 import xyz.stodo.repository.SemesterRepository;

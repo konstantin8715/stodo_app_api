@@ -1,4 +1,4 @@
-package xyz.stodo.factories;
+package xyz.stodo.factory;
 
 import org.springframework.stereotype.Component;
 import xyz.stodo.entity.Task;

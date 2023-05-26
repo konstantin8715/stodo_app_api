@@ -7,7 +7,7 @@ import xyz.stodo.entity.Subject;
 import xyz.stodo.entity.Task;
 import xyz.stodo.entity.User;
 import xyz.stodo.exception.SemesterNotFoundException;
-import xyz.stodo.factories.TaskResponseDtoFactory;
+import xyz.stodo.factory.TaskResponseDtoFactory;
 import xyz.stodo.payload.dto.CreateTaskRequestDto;
 import xyz.stodo.payload.dto.TaskResponseDto;
 import xyz.stodo.payload.dto.UpdateTaskRequestDto;
